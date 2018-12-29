@@ -1,6 +1,6 @@
 {
   "name": "mongo-crudify",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Generates crud operations for given mongoclient",
   "keywords": [
     "mongodb",
@@ -8,14 +8,23 @@
     "mongo-native-driver",
     "nodejs"
   ],
-  "repository": {"url": "https://github.com/Stioneq/mongo-crudify"},
+  "repository": {
+    "url": "https://github.com/Stioneq/mongo-crudify"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start --single-run"
   },
   "author": "Roman_Lapin <stioneq@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "mongodb": "^3.1.10"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
