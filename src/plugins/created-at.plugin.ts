@@ -3,11 +3,10 @@
  * @param options options to the plugin. Currently it is only a way to specify fieldName of the date field
  * @returns {[string,function]} pair of action name and plugin function
  */
-module.exports = options => {
+export default (options: any) => {
     const fieldName = options && options.fieldName || 'createdAt';
-    return ['insertOne', async function (data) {
+    return ['insertOne', async function (data: any) {
         data[fieldName] = new Date();
-        console.log('123213');
         return data;
     }]
 };

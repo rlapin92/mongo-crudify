@@ -89,6 +89,8 @@ crud.insertOne({
 ```
  
 ### Changes
+#### 1.0.7
+1) Fix issue with single instance of the middleware list
 #### 1.0.6
 1) Fix not working plugins
 2) Add typescript definition files

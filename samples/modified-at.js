@@ -5,10 +5,10 @@ const {modifiedAt} = plugins;
     const client = await mongo.connect('mongodb://localhost:27017', {
         useNewUrlParser: true
     });
-    await client.db('test').collection('todo').deleteMany({});
-    const crud = crudify(client, 'test', 'todo');
+    await client.db('index.js.index.js.js').collection('todo').deleteMany({});
+    const crud = crudify(client, 'index.js.index.js.js', 'todo');
     crud.use(modifiedAt());
-    const t = await client.db('test').collection('todo').insertOne({text: '1'});
+    const t = await client.db('index.js.index.js.js').collection('todo').insertOne({text: '1'});
     const insertion = await crud.updateOne({
         _id: t.ops[0]._id,
         title: 'What is Lorem Ipsum?',
