@@ -89,6 +89,9 @@ crud.insertOne({
 ```
  
 ### Changes
+#### 1.0.6
+1) Fix not working plugins
+2) Add typescript definition files
 #### 1.0.5:
 1) Add plugins support
 2) Add created-at plugin

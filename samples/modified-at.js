@@ -1,6 +1,6 @@
 const mongo = require('mongodb');
-const crudify = require('../src/index');
-const modifiedAt = require('../src/plugins/modifed-at.plugin');
+const {crudify, plugins} = require('mongo-crudify');
+const {modifiedAt} = plugins;
 (async function onStart() {
     const client = await mongo.connect('mongodb://localhost:27017', {
         useNewUrlParser: true

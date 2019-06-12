@@ -1,12 +1,14 @@
 {
   "name": "mongo-crudify",
-  "version": "1.0.5",
+  "version": "1.0.63",
   "description": "Generates crud operations for given mongoclient",
   "keywords": [
     "mongodb",
     "mongo",
     "mongo-native-driver",
-    "nodejs"
+    "nodejs",
+    "crud for mongo",
+    "nosql"
   ],
   "repository": {
     "url": "https://github.com/Stioneq/mongo-crudify"
@@ -15,7 +17,7 @@
     "src",
     "README.md"
   ],
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "karma start --single-run"
   },
