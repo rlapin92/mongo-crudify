@@ -1,13 +1,15 @@
 const mongo = require('mongodb');
 const {crudify, plugins} = require('mongo-crudify');
-const {createdAt} = {plugins};
+const {createdAt} = plugins;
 
 (async function onStart() {
     const client = await mongo.connect('mongodb://localhost:27017', {
         useNewUrlParser: true
     });
     const crud = crudify(client, 'test', 'todo');
+    console.log(createdAt);
     crud.use(createdAt());
+
     const t = await client.db('test').collection('todo').insertOne({text: '1'});
 
     const insertion = await crud.insertOne({

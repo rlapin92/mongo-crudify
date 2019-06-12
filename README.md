@@ -37,7 +37,7 @@ plugins/modified-at - allows to add modifiedAt field to updated documents
 #### 1.  Crud for users collection. 
 ```js
 // users.js
-   const crudify = require('mongo-crudify');
+   const {crudify} = require('mongo-crudify');
    const client = require('./db');
    const [dbName, collection] = ['auth', 'users'];
    module.exports = crudify(client, dbName, collection);
@@ -69,8 +69,8 @@ Lets consider that you need to persist object's date of creation. You can get ri
 created-at plugin that was introduce in v1.0.5:
 
 ```javascript
-const {createdAt} = require('mongo-crudify/plugins');
-const crudify = require('mongo-crudify');
+const {crudify,plugins} = require('mongo-crudify');
+const {createdAt} = plugins;
 const client = await mongo.connect('mongodb://localhost:27017', {
      useNewUrlParser: true
 });
