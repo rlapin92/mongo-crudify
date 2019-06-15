@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var delete_one_1 = require("./delete-one");
+exports.deleteOne = delete_one_1.default;
+var find_all_1 = require("./find-all");
+exports.findAll = find_all_1.default;
+var find_one_1 = require("./find-one");
+exports.findOne = find_one_1.default;
+var update_one_1 = require("./update-one");
+exports.updateOne = update_one_1.default;
+var insert_one_1 = require("./insert-one");
+exports.insertOne = insert_one_1.default;

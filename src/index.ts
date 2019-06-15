@@ -2,7 +2,7 @@ const crudify = require('./crudify');
 const plugins = require('./plugins');
 
 
-export {crudify, plugins};
+module.exports = {crudify, plugins};
 
 
 

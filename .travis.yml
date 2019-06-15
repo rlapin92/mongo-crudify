@@ -1,0 +1,13 @@
+language : node_js
+services:
+  - mongodb
+before_script:
+  - sleep 15
+  - mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+node_js :
+  - stable
+install:
+  - npm install
+script:
+  - npm test
+after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"

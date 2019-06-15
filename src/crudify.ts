@@ -1,22 +1,12 @@
 import {Collection, MongoClient} from "mongodb";
 import {Middlewares} from "./types/middleware";
-import {HasId} from "./types/hasId";
-import {findAll, deleteOne, insertOne, updateOne, findOne} from './operations';
-
-const {
-    ObjectId
-} = require('mongodb');
+import {deleteOne, findAll, findOne, insertOne, updateOne} from './operations';
 
 
-class MongoCrudify<T extends HasId> {
-    middlewares: Middlewares<T> = {};
-
-
+class MongoCrudify {
+    middlewares: Middlewares = {};
     constructor(public client: MongoClient, public dbName: string, public collection: string) {
-
     }
-
-
     /**
      * Helper function that retrieves collection instance
      */

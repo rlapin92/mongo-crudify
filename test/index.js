@@ -68,6 +68,9 @@ describe('Mongo Crudify', function () {
 
             Crudify = crudify(client, 'test', 'testCollection');
         });
+        after(() => {
+            client.close();
+        });
 
         beforeEach(async () => {
             client.db('test').collection('testCollection').deleteMany({});

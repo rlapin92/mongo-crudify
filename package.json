@@ -17,9 +17,11 @@
     "src",
     "README.md"
   ],
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha test/*.js -R spec",
     "test": "mocha --reporter spec"
   },
   "author": "Roman_Lapin <stioneq@gmail.com>",
@@ -31,6 +33,8 @@
     "@types/mongodb": "^3.1.28",
     "@types/node": "^12.0.8",
     "chai": "^4.2.0",
+    "coveralls": "^3.0.4",
+    "istanbul": "^0.4.5",
     "mocha": "^5.2.0",
     "typescript": "^3.5.2"
   }
