@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Stioneq/mongo-crudify.svg?branch=master)](https://travis-ci.org/Stioneq/mongo-crudify)
+[![Coverage Status](https://coveralls.io/repos/github/Stioneq/mongo-crudify/badge.svg)](https://coveralls.io/github/Stioneq/mongo-crudify)
 # Mongo-Crudify:
 Mongo-crudify is a library that allows to generate CRUD dao for given collection and database.
 
