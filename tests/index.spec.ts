@@ -1,13 +1,12 @@
-'use strict';
 
-const expect = require('chai').expect;
-const should = require('chai').should();
-const {crudify, plugins} = require('../dist/index.js');
-const {createdAt, modifiedAt} = plugins;
-const mongo = require('mongodb');
-const TEST_DB_URL = 'mongodb://localhost:27017';
 
 describe('Mongo Crudify', function () {
+    const mongo = require('mongodb');
+    const {crudify, plugins} = require('../src');
+    const {modifiedAt, createdAt} = plugins;
+    const TEST_DB_URL = 'mongodb://localhost:27017';
+    const expect = require('chai').expect;
+    const should = require('chai').should();
     describe('init tests', () => {
         it('should return Mongo Crudify instance', () => {
 

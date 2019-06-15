@@ -29,3 +29,5 @@ node_modules
 .history
 
 .idea
+
+\.nyc_output/
