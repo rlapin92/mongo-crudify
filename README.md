@@ -91,6 +91,10 @@ crud.insertOne({
 ```
  
 ### Changes
+#### 1.0.8
+1) Completely rewrite to typescript. Now it is available to use both js/ts
+2) Extract all operations to separate modules
+3) Now operations don't depend on mongo driver and will use only collection as an input
 #### 1.0.7
 1) Fix issue with single instance of the middleware list
 #### 1.0.6
