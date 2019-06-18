@@ -1,5 +1,5 @@
-const createdAt = require('./created-at.plugin');
-const modifiedAt = require('./modifed-at.plugin');
+import createdAt from './created-at.plugin';
+import modifiedAt from './modifed-at.plugin';
 
 
-module.exports = {createdAt, modifiedAt};
+export default {createdAt, modifiedAt};

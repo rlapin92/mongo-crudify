@@ -1,12 +1,14 @@
 import {Collection, MongoClient} from "mongodb";
-import {Middlewares} from "./types/middleware";
+import {Middlewares} from './types/middleware';
 import {deleteOne, findAll, findOne, insertOne, updateOne} from './operations';
 
 
 class MongoCrudify {
     middlewares: Middlewares = {};
+
     constructor(public client: MongoClient, public dbName: string, public collection: string) {
     }
+
     /**
      * Helper function that retrieves collection instance
      */
@@ -76,7 +78,7 @@ class MongoCrudify {
     };
 }
 
-export = (client: MongoClient, dbName: string, collection: string) => {
+export default (client: MongoClient, dbName: string, collection: string) => {
     const crudify = new MongoCrudify(client, dbName, collection);
     crudify
         .register(findAll)

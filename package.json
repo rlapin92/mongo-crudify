@@ -20,6 +20,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "dev": "nodemon",
     "build": "tsc",
     "cover": "nyc -r lcov -e .ts -x \"*.spec.ts\" mocha -r ts-node/register tests/*.spec.ts && nyc report",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts"

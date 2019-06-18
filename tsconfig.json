@@ -6,6 +6,14 @@
     "noImplicitAny": false,
     "outDir": "./dist",
     "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "suppressImplicitAnyIndexErrors": true
-  }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "test/**/*.spec.js"
+  ]
 }
