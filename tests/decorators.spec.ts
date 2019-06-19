@@ -2,8 +2,6 @@ import {Repository} from "../src/decorators/repository";
 import MongoConnector from "../src/connector";
 
 describe('Decorators tests', () => {
-    const {plugins} = require('../src');
-    const {createdAt} = plugins;
     const expect = require('chai').expect;
 
     before(async () => {

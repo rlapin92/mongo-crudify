@@ -6,7 +6,12 @@ describe('Connector tests', () => {
         expect(MongoConnector.client).to.not.be.an('undefined');
         expect(MongoConnector.client.isConnected()).to.be.true;
     });
-    after(() => {
+    it('should close connection even if connector is not initialized', async () => {
+        console.log(typeof MongoConnector.close)
+        expect(MongoConnector.close).to.not.throw();
+    });
+
+    afterEach(() => {
         MongoConnector.close();
-    })
+    });
 });

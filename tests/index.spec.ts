@@ -1,3 +1,4 @@
+import MongoConnector from "../src/connector";
 
 
 describe('Mongo Crudify', function () {
@@ -7,6 +8,14 @@ describe('Mongo Crudify', function () {
     const TEST_DB_URL = 'mongodb://localhost:27017';
     const expect = require('chai').expect;
     const should = require('chai').should();
+    before(async () => {
+        await MongoConnector.init(TEST_DB_URL, {
+            useNewUrlParser: true
+        });
+    });
+    after(() => {
+        MongoConnector.close();
+    });
     describe('init tests', () => {
         it('should return Mongo Crudify instance', () => {
 
@@ -16,35 +25,35 @@ describe('Mongo Crudify', function () {
 
         it('should define findOne operation', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             should.exist(Crudify.findOne);
         });
         it('should define findAll operation', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             should.exist(Crudify.findAll);
         });
 
         it('should define insertOne operation', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             should.exist(Crudify.insertOne);
         });
         it('should define deleteOne operation', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             should.exist(Crudify.deleteOne);
         });
 
         it('should define updateOne operation', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             should.exist(Crudify.updateOne);
         });
 
         it('should register action', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             should.not.exist(Crudify.findByAuthor);
             Crudify.register(function findByAuthor() {
             });
@@ -52,7 +61,7 @@ describe('Mongo Crudify', function () {
         });
         it('should fail if registered action is not a named function', () => {
 
-            const Crudify = crudify('a', 'a', '');
+            const Crudify = crudify('a', 'a');
             expect(() => Crudify.register(function () {
             })).to.throw();
 
@@ -62,16 +71,9 @@ describe('Mongo Crudify', function () {
         let Crudify;
         let client;
         before(async () => {
-            client = await mongo.connect('mongodb://localhost:27017', {
-                useNewUrlParser: true
-            });
-
-            Crudify = crudify('test', 'testCollection', client);
+            client = MongoConnector.client;
+            Crudify = crudify('test', 'testCollection');
         });
-        after(() => {
-            client.close();
-        });
-
         beforeEach(async () => {
             client.db('test').collection('testCollection').deleteMany({});
         });
@@ -128,14 +130,8 @@ describe('Mongo Crudify', function () {
         let Crudify;
         let client;
         before(async () => {
-            client = await mongo.connect('mongodb://localhost:27017', {
-                useNewUrlParser: true
-            });
-
-            Crudify = crudify('test', 'testCollection', client);
-        });
-        after(() => {
-            client.close();
+            client = MongoConnector.client;
+            Crudify = crudify('test', 'testCollection');
         });
 
         beforeEach(async () => {
@@ -173,4 +169,15 @@ describe('Mongo Crudify', function () {
 
         });
     });
+
+    describe.only('recognizable operations', () => {
+
+
+        it('should correctly init findBy operation', async () => {
+            const Crudify = crudify('test', 'testCollection', [
+                'findByAuthor'
+            ]);
+            expect(Crudify.findByAuthor).to.be.a('function');
+        })
+    })
 });

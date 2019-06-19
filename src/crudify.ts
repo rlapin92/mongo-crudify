@@ -2,6 +2,7 @@ import {Collection, MongoClient} from "mongodb";
 import {Middlewares} from './types/middleware';
 import {deleteOne, findAll, findOne, insertOne, updateOne} from './operations';
 import MongoConnector from "./connector";
+import {stringToFunction} from "./utils/convertor-utils";
 
 
 class MongoCrudify {
@@ -27,6 +28,7 @@ class MongoCrudify {
      * @param func should be named function in order to extract the action name
      * @returns {crudify}
      */
+
     register(func: any) {
         const action: string = func.name;
         if (!func.name) {
@@ -79,14 +81,25 @@ class MongoCrudify {
     };
 }
 
-export default (dbName: string, collection: string, client?: MongoClient) => {
-    const crudify = new MongoCrudify(client || MongoConnector.client, dbName, collection);
+/**
+ * Returns an object augmented with CRUD operations
+ * @param dbName database name
+ * @param collection collection name
+ * @param operations list of operations to be registered
+ */
+export default (dbName: string, collection: string, operations?: string[]) => {
+    const crudify = new MongoCrudify(MongoConnector.client, dbName, collection);
     crudify
         .register(findAll)
         .register(findOne)
         .register(insertOne)
         .register(updateOne)
         .register(deleteOne);
+    if(operations) {
+        for (const operation of operations) {
+            crudify.register(stringToFunction(operation));
+        }
+    }
     return crudify;
 };
 

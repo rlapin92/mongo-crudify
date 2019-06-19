@@ -6,18 +6,25 @@ import {MongoClient, MongoClientOptions} from "mongodb";
  * Establishes connections.
  */
 class MongoConnector {
-    static client: MongoClient;
+    static _client: MongoClient;
 
     static async init(url, config?: MongoClientOptions) {
 
-        return MongoConnector.client = await mongo.connect(url, {useNewUrlParser: true, ...config});
+        return MongoConnector._client = await mongo.connect(url, {useNewUrlParser: true, ...config});
+    }
+
+    static get client() {
+        if (!MongoConnector._client) {
+            console.error('MongoConnector has not been inited');
+        }
+        return MongoConnector._client;
     }
 
     static close() {
-        if (MongoConnector.client) {
-            MongoConnector.client.close().then(console.log);
+        if (MongoConnector._client) {
+            MongoConnector._client.close().then(console.log);
         } else {
-            console.log('MongoConnector has not been inited');
+            console.error('MongoConnector has not been inited');
         }
 
     }
