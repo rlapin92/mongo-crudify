@@ -10,41 +10,41 @@ describe('Mongo Crudify', function () {
     describe('init tests', () => {
         it('should return Mongo Crudify instance', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.exist(Crudify);
         });
 
         it('should define findOne operation', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.exist(Crudify.findOne);
         });
         it('should define findAll operation', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.exist(Crudify.findAll);
         });
 
         it('should define insertOne operation', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.exist(Crudify.insertOne);
         });
         it('should define deleteOne operation', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.exist(Crudify.deleteOne);
         });
 
         it('should define updateOne operation', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.exist(Crudify.updateOne);
         });
 
         it('should register action', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             should.not.exist(Crudify.findByAuthor);
             Crudify.register(function findByAuthor() {
             });
@@ -52,7 +52,7 @@ describe('Mongo Crudify', function () {
         });
         it('should fail if registered action is not a named function', () => {
 
-            const Crudify = crudify('', 'a', 'a', 2);
+            const Crudify = crudify('a', 'a', '');
             expect(() => Crudify.register(function () {
             })).to.throw();
 
@@ -66,7 +66,7 @@ describe('Mongo Crudify', function () {
                 useNewUrlParser: true
             });
 
-            Crudify = crudify(client, 'test', 'testCollection');
+            Crudify = crudify('test', 'testCollection', client);
         });
         after(() => {
             client.close();
@@ -132,7 +132,7 @@ describe('Mongo Crudify', function () {
                 useNewUrlParser: true
             });
 
-            Crudify = crudify(client, 'test', 'testCollection');
+            Crudify = crudify('test', 'testCollection', client);
         });
         after(() => {
             client.close();

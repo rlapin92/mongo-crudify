@@ -1,4 +1,3 @@
 import crudify from './crudify';
 import plugins from './plugins';
-
-export {crudify, plugins};
+export { crudify, plugins };

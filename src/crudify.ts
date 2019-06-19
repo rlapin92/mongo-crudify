@@ -1,6 +1,7 @@
 import {Collection, MongoClient} from "mongodb";
 import {Middlewares} from './types/middleware';
 import {deleteOne, findAll, findOne, insertOne, updateOne} from './operations';
+import MongoConnector from "./connector";
 
 
 class MongoCrudify {
@@ -78,8 +79,8 @@ class MongoCrudify {
     };
 }
 
-export default (client: MongoClient, dbName: string, collection: string) => {
-    const crudify = new MongoCrudify(client, dbName, collection);
+export default (dbName: string, collection: string, client?: MongoClient) => {
+    const crudify = new MongoCrudify(client || MongoConnector.client, dbName, collection);
     crudify
         .register(findAll)
         .register(findOne)
