@@ -1,7 +1,7 @@
-import MongoConnector from "../src/connector";
+import {MongoConnector} from "../src/connector";
 
 
-describe('Mongo Crudify', function () {
+describe.only('Mongo Crudify', function () {
     const mongo = require('mongodb');
     const {crudify, plugins} = require('../src');
     const {modifiedAt, createdAt} = plugins;
@@ -71,7 +71,7 @@ describe('Mongo Crudify', function () {
         let Crudify;
         let client;
         before(async () => {
-            client = MongoConnector.client;
+            client = await MongoConnector.client;
             Crudify = crudify('test', 'testCollection');
         });
         beforeEach(async () => {
@@ -130,7 +130,7 @@ describe('Mongo Crudify', function () {
         let Crudify;
         let client;
         before(async () => {
-            client = MongoConnector.client;
+            client = await MongoConnector.client;
             Crudify = crudify('test', 'testCollection');
         });
 
@@ -140,7 +140,6 @@ describe('Mongo Crudify', function () {
         it('should add new date field to the inserted items', async () => {
 
             Crudify.use(createdAt());
-
             await Crudify.insertOne({a: 1});
             const result = await client.db('test').collection('testCollection').find({}).toArray();
             expect(result).to.has.length(1);
@@ -203,8 +202,8 @@ describe('Mongo Crudify', function () {
     describe('recognizable operations it', () => {
         const [db, collection] = ['test', 'articles'];
         let client;
-        before(() => {
-            client = MongoConnector.client;
+        before(async () => {
+            client = await MongoConnector.client;
         });
         beforeEach(async () => {
 
@@ -237,6 +236,19 @@ describe('Mongo Crudify', function () {
             const orderedAuthors = await Crudify.findAuthorByTextOrderByAuthorDesc('Abc');
             expect(orderedAuthors[3]).to.deep.eq({author: 'Gwen'});
         });
+        it('should correctly project id and use two fields in search query', async () => {
+
+            await client.db(db).collection(collection).insertMany([{author: 'Mike', text: 'Abc'},
+                {author: 'John', text: 'Abc'},
+                {author: 'Mike', text: 'Abc'},
+                {author: 'James', text: 'Cde'},
+                {author: 'Gwen', text: 'Abc'}]);
+            const Crudify = crudify(db, collection, [
+                'findIdByAuthorAndText'
+            ]);
+            const orderedAuthors = await Crudify.findIdByAuthorAndText('John', 'Abc');
+            expect(orderedAuthors[0]).to.have.all.keys('_id');
+        });
         it('should correctly change id to _id in projection', async () => {
 
             await client.db(db).collection(collection).insertMany([{_id: 1, author: 'Mike', text: 'Abc'},
@@ -248,7 +260,7 @@ describe('Mongo Crudify', function () {
                 'findById'
             ]);
             const orderedAuthors = await Crudify.findById(1);
-            expect(orderedAuthors[0]).to.deep.eq({author: 'Mike', _id: 1, text: 'Abc'});
+            expect(orderedAuthors[0]).to.deep.eq({_id: 1, author: 'Mike', text: 'Abc'});
         });
         it('should sort by two fields', async () => {
 

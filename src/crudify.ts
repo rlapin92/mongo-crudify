@@ -1,14 +1,17 @@
 import {Collection, MongoClient} from "mongodb";
 import {Middlewares} from './types/middleware';
 import {deleteOne, findAll, findOne, insertOne, updateOne} from './operations';
-import MongoConnector from "./connector";
+import {MongoConnector} from "./connector";
 import {stringToFunction} from "./utils/convertor-utils";
 
+interface Anything {
+    [key: string]: any;
+}
 
-class MongoCrudify {
+class MongoCrudify implements Anything {
     middlewares: Middlewares = {};
 
-    constructor(public client: MongoClient, public dbName: string, public collection: string) {
+    constructor(public client: Promise<MongoClient>, public dbName: string, public collection: string) {
     }
 
     /**
@@ -38,20 +41,32 @@ class MongoCrudify {
         middlewares[action] = [];
         // @ts-ignore
         const that = this;
-        this[func.name] = async function (data: any) {
+        this[func.name] = async function (...args) {
             const actionMiddlewares = middlewares[action];
 
 
-            return actionMiddlewares.reduce((acc: Promise<any>, cur: ((arg: any) => any)) => {
-                return acc.then((data: any) => {
-                    return cur.call(this, data);
+            return actionMiddlewares
+                .reduce((acc: Promise<any>, cur: ((arg: any) => any)) => {
+                    return acc.then((...args) => {
+                        if(args && Array.isArray(args[0])){
+                            return cur.apply(this, ...args);
+                        }
+                        return cur.apply(this, args);
+                    });
+                }, Promise.resolve(args))
+                .then(async (...args: any) => {
+                    const collection = await that.getCollection();
+                    let fn;
+                    if(args && Array.isArray(args[0])){
+                        fn = func
+                            .apply(that, ...args)
+                    }else{
+                        fn = func
+                            .apply(that, args)
+                    }
+                    return fn
+                        .call(that, collection);
                 });
-            }, Promise.resolve(data)).then(async (data: any) => {
-                const collection = await that.getCollection();
-                return func
-                    .call(that, data)
-                    .call(that, collection);
-            });
         };
         return this;
     };
@@ -86,6 +101,12 @@ class MongoCrudify {
  * @param dbName database name
  * @param collection collection name
  * @param operations list of operations to be registered
+ * You can specify find query with support of projection, sorting and filtering
+ * Examples:
+ * 1) findAuthorByText - will be registered as a find operation with projection on Author field and filter query that
+ * includes Text
+ * 2) findOrderByCountAscCommentDesc - will be registered as a find operation with sort by two fields Count Asc and
+ * Comment Desc
  */
 export default (dbName: string, collection: string, operations?: string[]) => {
     const crudify = new MongoCrudify(MongoConnector.client, dbName, collection);
@@ -95,10 +116,10 @@ export default (dbName: string, collection: string, operations?: string[]) => {
         .register(insertOne)
         .register(updateOne)
         .register(deleteOne);
-    if(operations) {
+    if (operations) {
         for (const operation of operations) {
             const fn = stringToFunction(operation)
-            if(fn) {
+            if (fn) {
                 crudify.register(fn);
             }
         }

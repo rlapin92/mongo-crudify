@@ -19,11 +19,11 @@ function getSortQuery(str: any) {
         return {};
     }
     let res;
-    debugger;
     const sort = {};
     while ((res = sortRegexp.exec(str)) != null) {
         if (res[1] && res[2]) {
-            sort[res[1].toLowerCase()] = res[2] === 'Asc' ? 1 : -1;
+            sort[res[1].substr(0, 1)
+                .toLowerCase() + res[1].substr(1)] = res[2] === 'Asc' ? 1 : -1;
         }
     }
 
@@ -35,16 +35,19 @@ function getSortQuery(str: any) {
  * @param query
  */
 function prepareProjectionQuery(query: any) {
-    if (!!Object.keys(query).length && !query.id) {
-        query._id = 0;
-    } else {
-        delete query.id;
+    if (!!Object.keys(query).length) {
+        if (!query.id) {
+            query._id = 0;
+        } else {
+            delete query.id;
+            query._id = 1;
+        }
     }
     return query;
 }
 
 function prepareFilterQuery(query: any) {
-    if(query.id){
+    if (query.id) {
         query._id = query.id;
         delete query.id;
     }
