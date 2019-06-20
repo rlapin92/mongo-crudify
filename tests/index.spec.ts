@@ -170,7 +170,7 @@ describe('Mongo Crudify', function () {
         });
     });
 
-    describe.only('recognizable operations', () => {
+    describe('recognizable operations', () => {
 
 
         it('should correctly init findBy operation', async () => {
@@ -178,6 +178,90 @@ describe('Mongo Crudify', function () {
                 'findByAuthor'
             ]);
             expect(Crudify.findByAuthor).to.be.a('function');
-        })
+        });
+        it('should correctly init function with sort', async () => {
+            const Crudify = crudify('test', 'testCollection', [
+                'findSomethingOrderByAAscAuthorDesc'
+            ]);
+            expect(Crudify.findSomethingOrderByAAscAuthorDesc).to.be.an('function');
+        });
+        it('should not define incorrectly defined function', async () => {
+            const Crudify = crudify('test', 'testCollection', [
+                'findBy'
+            ]);
+            expect(Crudify.findBy).to.be.an('undefined');
+        });
+        it('should correctly define multiple functions', async () => {
+            const Crudify = crudify('test', 'testCollection', [
+                'findAuthorByCommentId', 'findSomethingOrderByAAsc', 'findProject'
+            ]);
+            expect(Crudify.findAuthorByCommentId).to.be.a('function');
+            expect(Crudify.findSomethingOrderByAAsc).to.be.a('function');
+            expect(Crudify.findProject).to.be.a('function');
+        });
+    });
+    describe('recognizable operations it', () => {
+        const [db, collection] = ['test', 'articles'];
+        let client;
+        before(() => {
+            client = MongoConnector.client;
+        });
+        beforeEach(async () => {
+
+            await client.db(db).collection(collection).deleteMany({});
+        });
+
+        it('should correctly find articles for given author', async () => {
+
+            await client.db(db).collection(collection).insertMany([{author: 'Mike', text: 'Hello world'},
+                {author: 'John', text: 'Hello world'},
+                {author: 'Mike', text: 'Hello world'},
+                {author: 'Mike', text: 'Hello world'},
+                {author: 'John', text: 'Hello world'}]);
+            const Crudify = crudify(db, collection, [
+                'findByAuthor'
+            ]);
+            const mikeArticles = await Crudify.findByAuthor('Mike');
+            expect(mikeArticles.length).to.eq(3);
+        });
+        it('should correctly apply projection and sort for query', async () => {
+
+            await client.db(db).collection(collection).insertMany([{author: 'Mike', text: 'Abc'},
+                {author: 'John', text: 'Abc'},
+                {author: 'Mike', text: 'Abc'},
+                {author: 'James', text: 'Cde'},
+                {author: 'Gwen', text: 'Abc'}]);
+            const Crudify = crudify(db, collection, [
+                'findAuthorByTextOrderByAuthorDesc'
+            ]);
+            const orderedAuthors = await Crudify.findAuthorByTextOrderByAuthorDesc('Abc');
+            expect(orderedAuthors[3]).to.deep.eq({author: 'Gwen'});
+        });
+        it('should correctly change id to _id in projection', async () => {
+
+            await client.db(db).collection(collection).insertMany([{_id: 1, author: 'Mike', text: 'Abc'},
+                {author: 'John', text: 'Abc'},
+                {author: 'Mike', text: 'Abc'},
+                {author: 'James', text: 'Cde'},
+                {author: 'Gwen', text: 'Abc'}]);
+            const Crudify = crudify(db, collection, [
+                'findById'
+            ]);
+            const orderedAuthors = await Crudify.findById(1);
+            expect(orderedAuthors[0]).to.deep.eq({author: 'Mike', _id: 1, text: 'Abc'});
+        });
+        it('should sort by two fields', async () => {
+
+            await client.db(db).collection(collection).insertMany([{rating: 5, text: 'A'},
+                {rating: 10, text: 'B'},
+                {rating: 24, text: 'C'},
+                {rating: 24, text: 'A'},
+                {rating: 12, text: 'E'}]);
+            const Crudify = crudify(db, collection, [
+                'findOrderByRatingDescTextAsc'
+            ]);
+            const result = await Crudify.findOrderByRatingDescTextAsc();
+            expect(result[0]).to.deep.include({rating: 24, text: 'A'});
+        });
     })
 });

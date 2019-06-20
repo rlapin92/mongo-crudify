@@ -97,7 +97,10 @@ export default (dbName: string, collection: string, operations?: string[]) => {
         .register(deleteOne);
     if(operations) {
         for (const operation of operations) {
-            crudify.register(stringToFunction(operation));
+            const fn = stringToFunction(operation)
+            if(fn) {
+                crudify.register(fn);
+            }
         }
     }
     return crudify;

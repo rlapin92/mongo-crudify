@@ -5,13 +5,10 @@ describe('Connector tests', () => {
         await MongoConnector.init('mongodb://localhost:27017');
         expect(MongoConnector.client).to.not.be.an('undefined');
         expect(MongoConnector.client.isConnected()).to.be.true;
+        MongoConnector.close();
     });
     it('should close connection even if connector is not initialized', async () => {
-        console.log(typeof MongoConnector.close)
+        delete MongoConnector._client;
         expect(MongoConnector.close).to.not.throw();
-    });
-
-    afterEach(() => {
-        MongoConnector.close();
     });
 });

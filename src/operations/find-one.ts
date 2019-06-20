@@ -6,6 +6,7 @@ import {ObjectId, Collection} from "mongodb";
  * @param id string representation of ObjectId
  */
 export default function findOne(id: string): (collection: Collection) => Promise<any> {
+
     return (collection) => collection.findOne({
         _id: new ObjectId(id)
     });
