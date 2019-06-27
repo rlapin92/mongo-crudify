@@ -275,5 +275,31 @@ describe.only('Mongo Crudify', function () {
             const result = await Crudify.findOrderByRatingDescTextAsc();
             expect(result[0]).to.deep.include({rating: 24, text: 'A'});
         });
+        it('should find one by rating ', async () => {
+
+            await client.db(db).collection(collection).insertMany([{rating: 5, text: 'A'},
+                {rating: 10, text: 'B'},
+                {rating: 24, text: 'C'},
+                {rating: 24, text: 'A'},
+                {rating: 12, text: 'E'}]);
+            const Crudify = crudify(db, collection, [
+                'findOneByRating'
+            ]);
+            const result = await Crudify.findOneByRating(10);
+            expect(result).to.deep.include({rating: 10, text: 'B'});
+        });
+        it('should find one with projection and sort', async () => {
+
+            await client.db(db).collection(collection).insertMany([{rating: 5, text: 'A'},
+                {rating: 10, text: 'B'},
+                {rating: 24, text: 'C'},
+                {rating: 24, text: 'A'},
+                {rating: 12, text: 'E'}]);
+            const Crudify = crudify(db, collection, [
+                'findOneTextByRatingOrderByTextAsc'
+            ]);
+            const result = await Crudify.findOneTextByRatingOrderByTextAsc(24);
+            expect(result).to.deep.include({text: 'A'});
+        });
     })
 });

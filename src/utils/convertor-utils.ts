@@ -55,20 +55,24 @@ function prepareFilterQuery(query: any) {
 }
 
 export const stringToFunction = (str) => {
-    const regexp = /^find((?!By|OrderBy)[A-Z][a-zA-Z]*?)?(?:(?!Order)By([A-Z][a-zA-Z]*?))?(?:OrderBy((?:[A-Z][a-zA-Z]*(?:Asc|Desc))*?))?$/g;
+    const regexp = /^find(One)?((?!By|OrderBy)[A-Z][a-zA-Z]*?)?(?:(?!Order)By([A-Z][a-zA-Z]*?))?(?:OrderBy((?:[A-Z][a-zA-Z]*(?:Asc|Desc))*?))?$/g;
     const res = regexp.exec(str);
     let projection = {};
     let sort = {};
     let filter = {};
+    let findOneQuery = false;
     if (!res) {
         return null;
     }
-    [projection, sort, filter] = [prepareProjectionQuery(getQuery(res[1])), getSortQuery(res[3]), prepareFilterQuery(getQuery(res[2], true))];
+    [findOneQuery, projection, sort, filter] = [!!res[1], prepareProjectionQuery(getQuery(res[2])), getSortQuery(res[4]), prepareFilterQuery(getQuery(res[3], true))];
     const fn = (...args) => {
         const filterWithArgs = Object.keys(filter).reduce((acc, cur) => {
             acc[cur] = args[+filter[cur].substr(1)];
             return acc;
         }, {});
+        if (findOneQuery) {
+            return collection => collection.findOne(filterWithArgs, {projection, sort});
+        }
         return collection => collection.find(filterWithArgs).project(projection).sort(sort).toArray();
     };
 

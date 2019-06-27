@@ -122,7 +122,28 @@ crud.insertOne({
 
 ```
  
+#### 4. Usage operation recognition for generation the findOne method:
+Lets consider that you need to find article's text by author and it should be only one article.
+
+```javascript
+const {crudify, MongoConnector} = require('mongo-crudify');
+
+MongoConnector.init('mongodb://localhost:27017', {}); // Here you can specify all MongoOptions
+
+const crud = crudify('test', 'articles', 'findOneTextByAuthor');
+crud.use(createdAt());
+
+crud.findOneTextByAuthor('Smith').then(text => {
+    // here we get the text of the article that was written by Smith
+});
+
+```
+  
+ 
+ 
 ### Changes
+#### 1.1.1
+1) Add support of the findOne query. FindOne query supports projection, sort and filtering.
 #### 1.1.0
 1) Introduce mongo-connector that will be a bridge between Mongo and Mongo-Crudify library
 There is no reason to manually initiate the connection and pass it to crudify method 
